@@ -80,7 +80,7 @@ namespace GameFormatReader.Common
 		public override void Write(short value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -93,7 +93,7 @@ namespace GameFormatReader.Common
 		public override void Write(ushort value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -106,7 +106,7 @@ namespace GameFormatReader.Common
 		public override void Write(int value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -119,7 +119,7 @@ namespace GameFormatReader.Common
 		public override void Write(uint value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -132,7 +132,7 @@ namespace GameFormatReader.Common
 		public override void Write(long value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -145,7 +145,7 @@ namespace GameFormatReader.Common
 		public override void Write(ulong value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -158,7 +158,7 @@ namespace GameFormatReader.Common
 		public override void Write(float value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}
@@ -173,21 +173,53 @@ namespace GameFormatReader.Common
 
 		public void Write(Vector2 value)
 		{
-			base.Write(value.X);
-			base.Write(value.Y);
+			if (systemLittleEndian && CurrentEndian == Endian.Little ||
+				!systemLittleEndian && CurrentEndian == Endian.Big)
+			{
+				base.Write(value.X);
+				base.Write(value.Y);
+			}
+			else // BE to LE or LE to BE
+			{
+				byte[] xBytes = BitConverter.GetBytes(value.X);
+				Array.Reverse(xBytes);
+				byte[] yBytes = BitConverter.GetBytes(value.Y);
+				Array.Reverse(yBytes);
+
+				base.Write(BitConverter.ToSingle(xBytes, 0));
+				base.Write(BitConverter.ToSingle(yBytes, 0));
+			}
+
 		}
 
 		public void Write(Vector3 value)
 		{
-			base.Write(value.X);
-			base.Write(value.Y);
-			base.Write(value.Z);
+			if (systemLittleEndian && CurrentEndian == Endian.Little ||
+				!systemLittleEndian && CurrentEndian == Endian.Big)
+			{
+				base.Write(value.X);
+				base.Write(value.Y);
+				base.Write(value.Z);
+			}
+			else // BE to LE or LE to BE
+			{
+				byte[] xBytes = BitConverter.GetBytes(value.X);
+				Array.Reverse(xBytes);
+				byte[] yBytes = BitConverter.GetBytes(value.Y);
+				Array.Reverse(yBytes);
+				byte[] zBytes = BitConverter.GetBytes(value.Z);
+				Array.Reverse(zBytes);
+
+				base.Write(BitConverter.ToSingle(xBytes, 0));
+				base.Write(BitConverter.ToSingle(yBytes, 0));
+				base.Write(BitConverter.ToSingle(zBytes, 0));
+			}
 		}
 
 		public override void Write(double value)
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				base.Write(value);
 			}

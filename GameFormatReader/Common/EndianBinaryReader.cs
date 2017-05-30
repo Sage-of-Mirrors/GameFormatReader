@@ -64,7 +64,7 @@ namespace GameFormatReader.Common
 		/// <param name="encoding">The <see cref="Encoding"/> to use for characters.</param>
 		/// <param name="leaveOpen">Whether or not to leave the stream open after this EndianBinaryReader is disposed.</param>
 		/// <param name="endian">The <see cref="Endian"/> to use when reading from files.</param>
-		public EndianBinaryReader(Stream stream, Encoding encoding, bool leaveOpen, Endian endian) : base (stream, encoding, leaveOpen)
+		public EndianBinaryReader(Stream stream, Encoding encoding, bool leaveOpen, Endian endian) : base(stream, encoding, leaveOpen)
 		{
 			CurrentEndian = endian;
 		}
@@ -75,7 +75,7 @@ namespace GameFormatReader.Common
 		/// <param name="data">Data to encapsulate</param>
 		/// <param name="endian"><see cref="Endian"/> to use when reading the data.</param>
 		public EndianBinaryReader(byte[] data, Endian endian)
-			: base (new MemoryStream(data))
+			: base(new MemoryStream(data))
 		{
 			CurrentEndian = endian;
 		}
@@ -114,7 +114,7 @@ namespace GameFormatReader.Common
 		public override short ReadInt16()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadInt16();
 			}
@@ -126,7 +126,7 @@ namespace GameFormatReader.Common
 		public override ushort ReadUInt16()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadUInt16();
 			}
@@ -138,7 +138,7 @@ namespace GameFormatReader.Common
 		public override int ReadInt32()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadInt32();
 			}
@@ -150,7 +150,7 @@ namespace GameFormatReader.Common
 		public override uint ReadUInt32()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadUInt32();
 			}
@@ -162,7 +162,7 @@ namespace GameFormatReader.Common
 		public override long ReadInt64()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadInt64();
 			}
@@ -174,7 +174,7 @@ namespace GameFormatReader.Common
 		public override ulong ReadUInt64()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadUInt64();
 			}
@@ -186,11 +186,11 @@ namespace GameFormatReader.Common
 		public override float ReadSingle()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadSingle();
 			}
-			
+
 			// BE to LE or LE to BE
 			float temp = base.ReadSingle();
 
@@ -202,22 +202,52 @@ namespace GameFormatReader.Common
 
 		public Vector2 ReadVector2()
 		{
-			return new Vector2(base.ReadSingle(), base.ReadSingle());
+			if (systemLittleEndian && CurrentEndian == Endian.Little ||
+				!systemLittleEndian && CurrentEndian == Endian.Big)
+			{
+				return new Vector2(base.ReadSingle(), base.ReadSingle());
+			}
+
+			// BE to LE or LE to BE
+			Vector2 temp = new Vector2(base.ReadSingle(), base.ReadSingle());
+
+			byte[] xBytes = BitConverter.GetBytes(temp.X);
+			Array.Reverse(xBytes);
+			byte[] yBytes = BitConverter.GetBytes(temp.Y);
+			Array.Reverse(yBytes);
+
+			return new Vector2(BitConverter.ToSingle(xBytes, 0), BitConverter.ToSingle(yBytes, 0));
 		}
 
 		public Vector3 ReadVector3()
 		{
-			return new Vector3(base.ReadSingle(), base.ReadSingle(), base.ReadSingle());
+			if (systemLittleEndian && CurrentEndian == Endian.Little ||
+				!systemLittleEndian && CurrentEndian == Endian.Big)
+			{
+				return new Vector3(base.ReadSingle(), base.ReadSingle(), base.ReadSingle());
+			}
+
+			// BE to LE or LE to BE
+			Vector3 temp = new Vector3(base.ReadSingle(), base.ReadSingle(), base.ReadSingle());
+
+			byte[] xBytes = BitConverter.GetBytes(temp.X);
+			Array.Reverse(xBytes);
+			byte[] yBytes = BitConverter.GetBytes(temp.Y);
+			Array.Reverse(yBytes);
+			byte[] zBytes = BitConverter.GetBytes(temp.Z);
+			Array.Reverse(zBytes);
+
+			return new Vector3(BitConverter.ToSingle(xBytes, 0), BitConverter.ToSingle(yBytes, 0), BitConverter.ToSingle(zBytes, 0));
 		}
 
 		public override double ReadDouble()
 		{
 			if (systemLittleEndian && CurrentEndian == Endian.Little ||
-			    !systemLittleEndian && CurrentEndian == Endian.Big)
+				!systemLittleEndian && CurrentEndian == Endian.Big)
 			{
 				return base.ReadDouble();
 			}
-			
+
 			// BE to LE or LE to BE
 			double temp = base.ReadDouble();
 
