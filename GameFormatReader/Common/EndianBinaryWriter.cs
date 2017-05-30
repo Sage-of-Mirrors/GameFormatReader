@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using OpenTK;
 
 // TODO: Write method equivalent for the decimal type.
 // How do you even go about flipping the endianness on this type?
@@ -168,6 +169,19 @@ namespace GameFormatReader.Common
 
 				base.Write(BitConverter.ToSingle(floatBytes, 0));
 			}
+		}
+
+		public void Write(Vector2 value)
+		{
+			base.Write(value.X);
+			base.Write(value.Y);
+		}
+
+		public void Write(Vector3 value)
+		{
+			base.Write(value.X);
+			base.Write(value.Y);
+			base.Write(value.Z);
 		}
 
 		public override void Write(double value)

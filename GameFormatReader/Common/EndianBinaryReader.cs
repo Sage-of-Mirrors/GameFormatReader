@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using OpenTK;
 
 // TODO: ReadDecimal method equivalent.
 // How do you even go about flipping the endianness on this type?
@@ -197,6 +198,16 @@ namespace GameFormatReader.Common
 			Array.Reverse(floatBytes);
 
 			return BitConverter.ToSingle(floatBytes, 0);
+		}
+
+		public Vector2 ReadVector2()
+		{
+			return new Vector2(base.ReadSingle(), base.ReadSingle());
+		}
+
+		public Vector3 ReadVector3()
+		{
+			return new Vector3(base.ReadSingle(), base.ReadSingle(), base.ReadSingle());
 		}
 
 		public override double ReadDouble()
